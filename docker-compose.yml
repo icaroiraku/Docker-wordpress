@@ -1,0 +1,38 @@
+version: '3' # Define a versão do arquivo docker-compose.yml que está sendo utilizado
+
+services: # Lista os serviços que serão iniciados pelo Docker Compose
+
+  db:
+    image: mysql # Define a imagem do serviço do banco de dados MySQL
+    command: --default-authentication-plugin=mysql_native_password # Define o plugin de autenticação padrão do MySQL
+    restart: always # Garante que o serviço seja reiniciado automaticamente se ele falhar ou se o servidor Docker for reiniciado
+    environment:
+      MYSQL_ROOT_PASSWORD: root # Define a senha do usuário root do MySQL
+    volumes:
+      - db_data:/var/lib/mysql # Mapeia um volume nomeado "db_data" para o diretório /var/lib/mysql dentro do contêiner do MySQL
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin # Define a imagem do serviço do PhpMyAdmin
+    restart: always # Garante que o serviço seja reiniciado automaticamente se ele falhar ou se o servidor Docker for reiniciado
+    environment:
+      PMA_HOST: db # Define o host do banco de dados que o PhpMyAdmin irá conectar
+      MYSQL_ROOT_PASSWORD: root # Define a senha do usuário root do MySQL
+    ports:
+      - "8080:80" # Mapeia a porta 8080 do host para a porta 80 do contêiner do PhpMyAdmin
+
+  wordpress:
+    image: wordpress # Define a imagem do serviço do WordPress
+    restart: always # Garante que o serviço seja reiniciado automaticamente se ele falhar ou se o servidor Docker for reiniciado
+    depends_on:
+      - db # Define que o serviço do WordPress depende do serviço do banco de dados
+    environment:
+      WORDPRESS_DB_HOST: db:3306 # Define o host e a porta do banco de dados MySQL/MariaDB que o WordPress irá conectar
+      WORDPRESS_DB_USER: root # Define o usuário do banco de dados que o WordPress irá utilizar
+      WORDPRESS_DB_PASSWORD: root # Define a senha do usuário do banco de dados que o WordPress irá utilizar
+      WORDPRESS_DB_NAME: wordpress # Define o nome do banco de dados que o WordPress irá utilizar
+    volumes:
+      - wordpress_data:/var/www/html # Mapeia um volume nomeado "wordpress_data" para o diretório /var/www/html dentro do contêiner do WordPress
+
+volumes:
+  db_data: # Define o volume nomeado "db_data"
+  wordpress_data: # Define o volume nomeado "wordpress_data"
