@@ -10,6 +10,8 @@ services: # Lista os serviços que serão iniciados pelo Docker Compose
       MYSQL_ROOT_PASSWORD: root # Define a senha do usuário root do MySQL
     volumes:
       - db_data:/var/lib/mysql # Mapeia um volume nomeado "db_data" para o diretório /var/lib/mysql dentro do contêiner do MySQL
+    ports:
+      - "3306:3306" # Mapeia a porta 3306 para o contêiner do MySQL
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin # Define a imagem do serviço do PhpMyAdmin
@@ -30,6 +32,8 @@ services: # Lista os serviços que serão iniciados pelo Docker Compose
       WORDPRESS_DB_USER: root # Define o usuário do banco de dados que o WordPress irá utilizar
       WORDPRESS_DB_PASSWORD: root # Define a senha do usuário do banco de dados que o WordPress irá utilizar
       WORDPRESS_DB_NAME: wordpress # Define o nome do banco de dados que o WordPress irá utilizar
+    ports:
+      - "80:80" # Mapeia a porta 80 para o contêiner do WordPress
     volumes:
       - wordpress_data:/var/www/html # Mapeia um volume nomeado "wordpress_data" para o diretório /var/www/html dentro do contêiner do WordPress
 
